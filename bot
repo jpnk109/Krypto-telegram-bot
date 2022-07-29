@@ -1,0 +1,183 @@
+import requests
+from bs4 import BeautifulSoup as BS
+import telebot
+from telebot import types
+import requests
+from bs4 import BeautifulSoup
+
+bot = telebot.TeleBot('5428032980:AAEqBDYLnHD3Xni_lRIPy1ttk2khC1hVfho')
+pep=0
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1=types.KeyboardButton("📈Курс")
+    item2=types.KeyboardButton("⚙Настройки")
+    markup.add(item1,item2)
+    bot.send_message(message.chat.id,'Привет', reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def bot_message(message):
+    global pep
+    global valut
+    if message.chat.type=='private':
+        if message.text=='📈Курс':
+            bit='https://coinmarketcap.com/currencies/bitcoin/'
+            headers={"User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'}
+            bitok=requests.get(bit,headers=headers)
+            bitcoin=BeautifulSoup(bitok.text,'lxml')
+            data=bitcoin.find('div',class_='priceValue',)
+            priceb=data.find('span').text.replace("\n",'').replace(",","").replace("$","")
+            priceb=priceb[:-3]
+            ethereum='https://coinmarketcap.com/currencies/ethereum/'
+            ether=requests.get(ethereum,headers=headers)
+            ethe=BeautifulSoup(ether.text,'lxml')
+            eth=ethe.find('div',class_='priceValue',)
+            pricee=eth.find('span').text.replace("\n",'').replace(",",'').replace("$","")
+            pricee=pricee[:-3]
+            litecoin='https://coinmarketcap.com/currencies/litecoin/'
+            liteco=requests.get(litecoin,headers=headers)
+            litec=BeautifulSoup(liteco.text,'lxml')
+            lite=litec.find('div',class_='priceValue',)
+            pricel=lite.find('span').text.replace("\n",'').replace(",",'').replace("$","")
+            if pep==1:
+                v='https://wise.com/gb/currency-converter/usd-to-rub-rate'
+                headers={"User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'}
+                va=requests.get(v,headers=headers)
+                val=BeautifulSoup(va.text,'lxml')
+                dok=val.find('h3',class_='cc__source-to-target',)
+                ruk=dok.find('span',class_='text-success',).text.replace("\n",'')
+                ruk=ruk[:-3]
+                ruk=float(ruk)
+                priceb=float(priceb)
+                pricee=float(pricee)
+                pricel=float(pricel)
+                bot.send_message(message.chat.id,f'📈Курс \U0001f7e1Биткоина={priceb*ruk}₽\n📈Курс 🔵Эфириума={pricee*ruk}₽\n📈Курс 🔹Лайткоина={pricel*ruk}₽')
+            else:
+                bot.send_message(message.chat.id,f'📈Курс \U0001f7e1Биткоина={priceb}$\n📈Курс 🔵Эфириума={pricee}$\n📈Курс 🔹Лайткоина={pricel}$')
+        elif message.text=='⚙Настройки':
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item9=types.KeyboardButton("⏪Назад")
+            item4=types.KeyboardButton("💱Валюта")
+            item3=types.KeyboardButton("🏳Язык")
+            markup.add(item3,item4,item9)
+            bot.send_message(message.chat.id,'⚙Настройки', reply_markup=markup)
+
+        elif message.text=="🏳Язык":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item5=types.KeyboardButton("🇺🇸English")
+            item6=types.KeyboardButton("🇷🇺Русский")
+            item9=types.KeyboardButton("⏪Назад")
+            markup.add(item5,item6,item9)
+            bot.send_message(message.chat.id,'🏳Язык', reply_markup=markup)
+        elif message.text=='⏪Назад':
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1=types.KeyboardButton("📈Курс")
+            item2=types.KeyboardButton("⚙Настройки")
+            markup.add(item1,item2)
+            bot.send_message(message.chat.id,'Главное меню', reply_markup=markup)
+        elif message.text=="💱Валюта":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item7=types.KeyboardButton("₽ Рубль")
+            item8=types.KeyboardButton("💲Доллар")
+            item9=types.KeyboardButton("⏪Назад")
+            markup.add(item7,item8,item9)
+            bot.send_message(message.chat.id,'💱Валюта', reply_markup=markup)
+        elif message.text=="🇷🇺Русский":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1=types.KeyboardButton("📈Курс")
+            item2=types.KeyboardButton("⚙Настройки")
+            markup.add(item1,item2)
+            bot.send_message(message.chat.id,'Главное меню', reply_markup=markup)
+        elif message.text=="🇺🇸English":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item7=types.KeyboardButton("📈Rate")
+            item9=types.KeyboardButton("⚙Settings")
+            markup.add(item7,item9)
+            bot.send_message(message.chat.id,'Main menu', reply_markup=markup)
+        elif message.text=="📈Rate":
+             bit='https://coinmarketcap.com/currencies/bitcoin/'
+             headers={"User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'}
+             bitok=requests.get(bit,headers=headers)
+             bitcoin=BeautifulSoup(bitok.text,'lxml')
+             data=bitcoin.find('div',class_='priceValue',)
+             priceb=data.find('span').text.replace("\n",'').replace(",",'').replace("$","")
+             priceb=priceb[:-3]
+             ethereum='https://coinmarketcap.com/currencies/ethereum/'
+             ether=requests.get(ethereum,headers=headers)
+             ethe=BeautifulSoup(ether.text,'lxml')
+             eth=ethe.find('div',class_='priceValue',)
+             pricee=eth.find('span').text.replace("\n",'').replace(",",'').replace("$","")
+             pricee=pricee[:-3]
+             litecoin='https://coinmarketcap.com/currencies/litecoin/'
+             liteco=requests.get(litecoin,headers=headers)
+             litec=BeautifulSoup(liteco.text,'lxml')
+             lite=litec.find('div',class_='priceValue',)
+             pricel=lite.find('span').text.replace("\n",'').replace(",",'').replace("$","")
+             if pep==1:
+                v='https://wise.com/gb/currency-converter/usd-to-rub-rate'
+                headers={"User-Agent":'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36'}
+                va=requests.get(v,headers=headers)
+                val=BeautifulSoup(va.text,'lxml')
+                dok=val.find('h3',class_='cc__source-to-target',)
+                ruk=dok.find('span',class_='text-success',).text.replace("\n",'')
+                ruk=ruk[:-3]
+                ruk=float(ruk)
+                priceb=float(priceb)
+                pricee=float(pricee)
+                pricel=float(pricel)
+                bot.send_message(message.chat.id,f'\U0001f7e1Bitcoin 📈rate={priceb*ruk}₽ \n🔵Ethereum 📈rate={pricee*ruk}₽ \n🔹Litecoin 📈rate={pricel*ruk}₽ ')
+             else:
+                bot.send_message(message.chat.id,f'\U0001f7e1Bitcoin 📈rate={priceb}$\n🔵Ethereum 📈rate={pricee}$\n🔹Litecoin 📈rate={pricel}$')
+        elif message.text=="⚙Settings":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item9=types.KeyboardButton("⏪Back")
+            item4=types.KeyboardButton("💱Currency")
+            item3=types.KeyboardButton("🏳Language")
+            markup.add(item3,item4,item9)
+            bot.send_message(message.chat.id,'⚙Settings', reply_markup=markup)
+        elif message.text=="💱Currency":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item7=types.KeyboardButton("₽ Ruble")
+            item8=types.KeyboardButton("💲Dollar")
+            item9=types.KeyboardButton("⏪Back")
+            markup.add(item7,item8,item9)
+            bot.send_message(message.chat.id,'⚙Settings', reply_markup=markup)
+        elif message.text=='⏪Back':
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1=types.KeyboardButton("📈Rate")
+            item2=types.KeyboardButton("⚙Settings")
+            markup.add(item1,item2)
+            bot.send_message(message.chat.id,'Main menu', reply_markup=markup)
+        elif message.text=="🏳Language":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item5=types.KeyboardButton("🇺🇸English")
+            item6=types.KeyboardButton("🇷🇺Русский")
+            item9=types.KeyboardButton("⏪Back")
+            markup.add(item5,item6,item9)
+            bot.send_message(message.chat.id,'🏳Language', reply_markup=markup)
+        elif message.text=="₽ Ruble":
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item7=types.KeyboardButton("📈Rate")
+            item9=types.KeyboardButton("⚙Settings")
+            markup.add(item7,item9)
+            pep=1
+            bot.send_message(message.chat.id,'Main menu', reply_markup=markup)
+        elif message.text=='💲Доллар':
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1=types.KeyboardButton("📈Курс")
+            item2=types.KeyboardButton("⚙Настройки")
+            valut="💲"
+            markup.add(item1,item2)
+            bot.send_message(message.chat.id,'Главное меню', reply_markup=markup)
+        elif message.text=='₽ Рубль':
+            markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1=types.KeyboardButton("📈Курс")
+            item2=types.KeyboardButton("⚙Настройки")
+            pep=1
+            markup.add(item1,item2)
+            bot.send_message(message.chat.id,'Главное меню', reply_markup=markup)
+
+
+
+bot.polling(none_stop=True)
